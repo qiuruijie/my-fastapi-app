@@ -107,9 +107,10 @@ test("Logged-out user cannot access protected routes", async ({ page }) => {
 })
 
 test("Redirects to /login when token is wrong", async ({ page }) => {
-  await page.goto("/settings")
+  await page.goto("/login")
+  // 伪造登录标记，使路由守卫放行；随后 /users/me 因缺少有效 HttpOnly Cookie 返回 401
   await page.evaluate(() => {
-    localStorage.setItem("access_token", "invalid_token")
+    document.cookie = "logged_in=true; path=/"
   })
   await page.goto("/settings")
   await page.waitForURL("/login")

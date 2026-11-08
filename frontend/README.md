@@ -1,123 +1,123 @@
-# FastAPI Project - Frontend
+# FastAPI 项目 - 前端
 
-The frontend is built with [Vite](https://vitejs.dev/), [React](https://react.dev/), [TypeScript](https://www.typescriptlang.org/), [TanStack Query](https://tanstack.com/query), [TanStack Router](https://tanstack.com/router), [Tailwind CSS](https://tailwindcss.com/), and [shadcn/ui](https://ui.shadcn.com/).
+前端使用 [Vite](https://vitejs.dev/)、[React](https://react.dev/)、[TypeScript](https://www.typescriptlang.org/)、[TanStack Query](https://tanstack.com/query)、[TanStack Router](https://tanstack.com/router)、[Tailwind CSS](https://tailwindcss.com/) 和 [shadcn/ui](https://ui.shadcn.com/) 构建。
 
-## Requirements
+## 环境要求
 
 - [Bun](https://bun.sh/)
 
-## Quick Start
+## 快速开始
 
-From the project root, install the dependencies and start the frontend development server:
+在项目根目录安装依赖并启动前端开发服务器：
 
 ```bash
 bun install
 bun run dev
 ```
 
-Then open <http://localhost:5173/> in your browser.
+然后在浏览器中打开 <http://localhost:5173/>。
 
-Run `uv run bash scripts/prestart.sh` and `uv run fastapi dev` from the `backend` directory, with PostgreSQL running in Docker Compose. See [../development.md](../development.md) for the complete setup.
+在 `backend` 目录下运行 `uv run bash scripts/prestart.sh` 和 `uv run fastapi dev`，并在 Docker Compose 中运行 PostgreSQL。完整的环境搭建请看 [../development.md](../development.md)。
 
-To serve the frontend with FastAPI, run `bun run build` from the `frontend` directory and open `http://localhost:8000`.
+要由 FastAPI 提供前端服务，请在 `frontend` 目录运行 `bun run build`，然后打开 `http://localhost:8000`。
 
-Check `frontend/package.json` to see the other available commands.
+查看 `frontend/package.json` 了解其他可用命令。
 
-## Removing the Frontend
+## 移除前端
 
-If you are developing an API-only app and want to remove the frontend, you can do it easily:
+如果你只开发纯 API 应用，想要移除前端，可以这样做：
 
-- Remove the `./frontend` directory.
+- 删除 `./frontend` 目录。
 
-- In the `backend/app/main.py` file, remove the `app.frontend()` call.
+- 在 `backend/app/main.py` 文件中，删除 `app.frontend()` 调用。
 
-- In the `backend/Dockerfile` file, remove the frontend build stage and the `COPY --from=frontend-build` instruction.
+- 在 `backend/Dockerfile` 文件中，删除前端构建阶段和 `COPY --from=frontend-build` 指令。
 
-- In the `compose.override.yml` file, remove the `playwright` service.
+- 在 `compose.override.yml` 文件中，删除 `playwright` 服务。
 
-- In the `.github/workflows/deploy.yml` file, remove the **Set up Bun**, **Install frontend dependencies**, and **Build frontend** steps.
+- 在 `.github/workflows/deploy.yml` 文件中，删除 **Set up Bun**、**Install frontend dependencies** 和 **Build frontend** 步骤。
 
-- In the `.fastapicloudignore` file, remove the `!backend/app/frontend/` entry.
+- 在 `.fastapicloudignore` 文件中，删除 `!backend/app/frontend/` 条目。
 
-Done, you now have an API-only app. 🤓
+完成，现在你拥有了一个纯 API 应用。🤓
 
-## Generate Client
+## 生成客户端
 
-### Automatically
+### 自动方式
 
-- From the project root, run the script:
+- 在项目根目录运行脚本：
 
 ```bash
 bash ./scripts/generate-client.sh
 ```
 
-- Commit the changes.
+- 提交更改。
 
-### Manually
+### 手动方式
 
-- Make sure the backend is running.
+- 确保后端正在运行。
 
-- Download the OpenAPI JSON file from `http://localhost:8000/api/v1/openapi.json` and copy it to a new file `openapi.json` at the root of the `frontend` directory.
+- 从 `http://localhost:8000/api/v1/openapi.json` 下载 OpenAPI JSON 文件，并将其复制为 `frontend` 目录根下名为 `openapi.json` 的新文件。
 
-- To generate the frontend client, run:
+- 生成前端客户端，运行：
 
 ```bash
 bun run generate-client
 ```
 
-- Commit the changes.
+- 提交更改。
 
-Regenerate the client whenever backend changes affect the OpenAPI schema.
+当后端变更影响 OpenAPI schema 时，需要重新生成客户端。
 
-## Using a Remote API
+## 使用远程 API
 
-By default, the built frontend uses the same origin as the FastAPI app. If you want to use a remote API while running the Vite development server, you can set the environment variable `VITE_API_URL` to the URL of the remote API. For example, you can set it in the `frontend/.env` file:
+默认情况下，构建后的前端与 FastAPI 应用使用同一来源。如果你希望在运行 Vite 开发服务器时调用远程 API，可以将环境变量 `VITE_API_URL` 设置为远程 API 的 URL。例如，在 `frontend/.env` 文件中设置：
 
 ```env
 VITE_API_URL=https://my-domain.example.com
 ```
 
-Then, when you run the frontend, it will use that URL as the base URL for the API.
+之后运行前端时，就会使用该 URL 作为 API 的基础 URL。
 
-## Code Structure
+## 代码结构
 
-The frontend code is structured as follows:
+前端代码结构如下：
 
-- `frontend/src` - The main frontend code.
-- `frontend/public` - Static assets.
-- `frontend/src/client` - The generated OpenAPI client.
-- `frontend/src/components` - The components of the frontend, including the shadcn/ui components in `frontend/src/components/ui`.
-- `frontend/src/hooks` - Custom hooks.
-- `frontend/src/lib` - Shared frontend utilities.
-- `frontend/src/routes` - The frontend routes and pages.
+- `frontend/src` - 主要的前端代码。
+- `frontend/public` - 静态资源。
+- `frontend/src/client` - 生成的 OpenAPI 客户端。
+- `frontend/src/components` - 前端组件，其中 `frontend/src/components/ui` 是 shadcn/ui 组件。
+- `frontend/src/hooks` - 自定义 hooks。
+- `frontend/src/lib` - 前端共享工具函数。
+- `frontend/src/routes` - 前端路由与页面。
 
-## End-to-End Testing with Playwright
+## 使用 Playwright 进行端到端测试
 
-The frontend includes initial end-to-end tests using Playwright. To run the tests, you need to have the Docker Compose stack running. Start the stack with the following command:
+前端内置了使用 Playwright 的初始端到端测试。运行这些测试需要 Docker Compose 技术栈处于运行状态。先用以下命令启动技术栈：
 
 ```bash
 docker compose run --rm backend bash scripts/prestart.sh
 docker compose up -d --wait backend
 ```
 
-Then, you can run the tests with the following command:
+然后，可以用以下命令运行测试：
 
 ```bash
 bunx playwright test
 ```
 
-You can also run your tests in UI mode to see the browser and interact with it running:
+你也可以用 UI 模式运行测试，以便看到浏览器并与之交互：
 
 ```bash
 bunx playwright test --ui
 ```
 
-To stop and remove the Docker Compose stack and clean the data created in tests, use the following command:
+要停止并移除 Docker Compose 技术栈、清理测试产生的数据，请使用以下命令：
 
 ```bash
 docker compose down -v
 ```
 
-To update the tests, navigate to the tests directory and modify the existing test files or add new ones as needed.
+要更新测试，请进入 tests 目录，修改现有测试文件或按需添加新文件。
 
-For more information on writing and running Playwright tests, refer to the official [Playwright documentation](https://playwright.dev/docs/intro).
+关于编写和运行 Playwright 测试的更多信息，请参考官方 [Playwright 文档](https://playwright.dev/docs/intro)。

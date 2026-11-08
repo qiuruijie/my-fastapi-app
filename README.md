@@ -1,88 +1,88 @@
-# Full Stack FastAPI Template
+# Full Stack FastAPI 模板
 
 [![Test Docker Compose](../../actions/workflows/test-docker-compose.yml/badge.svg)](../../actions/workflows/test-docker-compose.yml)
 [![Test Backend](../../actions/workflows/test-backend.yml/badge.svg)](../../actions/workflows/test-backend.yml)
 
-## Technology Stack and Features
+## 技术栈与功能特性
 
-- ⚡ [**FastAPI**](https://fastapi.tiangolo.com) for the Python backend API.
-  - 🧰 [SQLModel](https://sqlmodel.tiangolo.com) for the Python SQL database interactions (ORM).
-  - 🔍 [Pydantic](https://docs.pydantic.dev), used by FastAPI, for the data validation and settings management.
-  - 💾 [PostgreSQL](https://www.postgresql.org) as the SQL database.
-- 🚀 [React](https://react.dev) for the frontend.
-  - 🧩 Built into the backend application and served by FastAPI on the same domain as the API.
-  - 💃 Using TypeScript, hooks, [Vite](https://vitejs.dev), and other parts of a modern frontend stack.
-  - 🎨 [Tailwind CSS](https://tailwindcss.com) and [shadcn/ui](https://ui.shadcn.com) for the frontend components.
-  - 🤖 An automatically generated frontend client.
-  - 🧪 [Playwright](https://playwright.dev) for end-to-end testing.
-  - 🦇 Dark mode support.
-- ☁️ [FastAPI Cloud](https://fastapicloud.com) for deployment.
-- 🐋 [Docker Compose](https://www.docker.com) for local services and self-hosted deployment.
-  - 📞 [Traefik](https://traefik.io) as a reverse proxy with automatic HTTPS.
-- 🔒 Secure password hashing by default.
-- 🔑 JWT (JSON Web Token) authentication.
-- 📫 Email-based password recovery.
-- ✉️ [React Email](https://react.email) for email templates.
-- 📬 [Mailpit](https://mailpit.axllent.org) for local email testing during development.
-- ✅ Tests with [Pytest](https://pytest.org).
-- 🏭 CI (continuous integration) and CD (continuous deployment) based on GitHub Actions.
+- ⚡ [**FastAPI**](https://fastapi.tiangolo.com)：Python 后端 API。
+  - 🧰 [SQLModel](https://sqlmodel.tiangolo.com)：Python 与 SQL 数据库的交互（ORM）。
+  - 🔍 [Pydantic](https://docs.pydantic.dev)：由 FastAPI 使用，负责数据校验与配置管理。
+  - 💾 [PostgreSQL](https://www.postgresql.org)：SQL 数据库。
+- 🚀 [React](https://react.dev)：前端。
+  - 🧩 构建产物内置于后端应用中，由 FastAPI 在与 API 相同的域名下提供服务。
+  - 💃 使用 TypeScript、hooks、[Vite](https://vitejs.dev) 以及现代前端技术栈的其他部分。
+  - 🎨 使用 [Tailwind CSS](https://tailwindcss.com) 和 [shadcn/ui](https://ui.shadcn.com) 构建前端组件。
+  - 🤖 自动生成的前端客户端。
+  - 🧪 使用 [Playwright](https://playwright.dev) 进行端到端测试。
+  - 🦇 支持深色模式。
+- ☁️ [FastAPI Cloud](https://fastapicloud.com)：用于部署。
+- 🐋 [Docker Compose](https://www.docker.com)：用于本地服务与自托管部署。
+  - 📞 [Traefik](https://traefik.io)：作为反向代理，自动处理 HTTPS。
+- 🔒 默认提供安全的密码哈希。
+- 🔑 JWT（JSON Web Token）认证。
+- 📫 基于邮箱的密码找回。
+- ✉️ [React Email](https://react.email)：邮件模板。
+- 📬 [Mailpit](https://mailpit.axllent.org)：开发期间的本地邮件测试。
+- ✅ 使用 [Pytest](https://pytest.org) 的测试。
+- 🏭 基于 GitHub Actions 的 CI（持续集成）与 CD（持续部署）。
 
-### Dashboard Login
+### 仪表盘登录
 
 ![Dashboard login screenshot](img/login.png)
 
-### Dashboard - Admin
+### 仪表盘 - 管理员
 
 ![Admin dashboard screenshot](img/dashboard.png)
 
-### Dashboard - Items
+### 仪表盘 - 条目
 
 ![Items dashboard screenshot](img/dashboard-items.png)
 
-### Dashboard - Dark Mode
+### 仪表盘 - 深色模式
 
 ![Dark mode dashboard screenshot](img/dashboard-dark.png)
 
-### React Email Templates
+### React Email 模板
 
 ![Email templates screenshot](img/react-email.png)
 
-### Mailpit - Local Email Testing
+### Mailpit - 本地邮件测试
 
 ![Mailpit screenshot](img/mailpit.png)
 
-### Interactive API Documentation
+### 交互式 API 文档
 
 ![API docs](img/docs.png)
 
-## How to Use It
+## 如何使用
 
-Click the **Use this template** button at the top of this page to create a new repository.
+点击本页面顶部的 **Use this template**（使用此模板）按钮来创建一个新仓库。
 
-## Backend Development
+## 后端开发
 
-Backend docs: [backend/README.md](./backend/README.md).
+后端文档：[backend/README.md](./backend/README.md)。
 
-## Frontend Development
+## 前端开发
 
-Frontend docs: [frontend/README.md](./frontend/README.md).
+前端文档：[frontend/README.md](./frontend/README.md)。
 
-## Deployment
+## 部署
 
-FastAPI Cloud deployment: [deployment.md](./deployment.md).
+FastAPI Cloud 部署：[deployment.md](./deployment.md)。
 
-Self-hosted deployment with Docker Compose: [deployment-docker-compose.md](./deployment-docker-compose.md).
+使用 Docker Compose 的自托管部署：[deployment-docker-compose.md](./deployment-docker-compose.md)。
 
-## Development
+## 开发
 
-General development docs: [development.md](./development.md).
+通用开发文档：[development.md](./development.md)。
 
-This includes the local FastAPI and Vite workflow, Docker Compose services, `.env` configuration, and more.
+其中包含本地 FastAPI 与 Vite 的工作流、Docker Compose 服务、`.env` 配置等内容。
 
-## Release Notes
+## 发布说明
 
-Check the file [release-notes.md](./release-notes.md).
+查看文件 [release-notes.md](./release-notes.md)。
 
-## License
+## 许可证
 
-The Full Stack FastAPI Template is licensed under the terms of the MIT license.
+Full Stack FastAPI 模板依据 MIT 许可证条款进行授权。

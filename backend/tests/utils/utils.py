@@ -14,13 +14,22 @@ def random_email() -> str:
     return f"{random_lower_string()}@{random_lower_string()}.com"
 
 
-def get_superuser_token_headers(client: TestClient) -> dict[str, str]:
-    login_data = {
-        "username": settings.FIRST_SUPERUSER,
-        "password": settings.FIRST_SUPERUSER_PASSWORD,
-    }
-    r = client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
-    tokens = r.json()
-    a_token = tokens["access_token"]
-    headers = {"Authorization": f"Bearer {a_token}"}
-    return headers
+def login(client: TestClient, *, email: str, password: str) -> None:
+    """
+    Log in through the API; the HttpOnly access_token cookie is stored on the
+    client itself, so subsequent requests on the same client are authenticated.
+    """
+    client.cookies.clear()
+    r = client.post(
+        f"{settings.API_V1_STR}/login/access-token",
+        data={"username": email, "password": password},
+    )
+    assert r.status_code == 200, f"Login failed: {r.text}"
+
+
+def login_superuser(client: TestClient) -> None:
+    login(
+        client,
+        email=settings.FIRST_SUPERUSER,
+        password=settings.FIRST_SUPERUSER_PASSWORD,
+    )

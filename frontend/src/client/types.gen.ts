@@ -159,20 +159,6 @@ export type PrivateUserCreate = {
 };
 
 /**
- * Token
- */
-export type Token = {
-    /**
-     * Access Token
-     */
-    access_token: string;
-    /**
-     * Token Type
-     */
-    token_type?: string;
-};
-
-/**
  * UpdatePassword
  */
 export type UpdatePassword = {
@@ -362,10 +348,26 @@ export type loginLoginAccessTokenResponses = {
     /**
      * Successful Response
      */
-    200: Token;
+    200: Message;
 };
 
 export type loginLoginAccessTokenResponse = loginLoginAccessTokenResponses[keyof loginLoginAccessTokenResponses];
+
+export type loginLoginLogoutData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/login/logout';
+};
+
+export type loginLoginLogoutResponses = {
+    /**
+     * Successful Response
+     */
+    200: Message;
+};
+
+export type loginLoginLogoutResponse = loginLoginLogoutResponses[keyof loginLoginLogoutResponses];
 
 export type loginTestTokenData = {
     body?: never;

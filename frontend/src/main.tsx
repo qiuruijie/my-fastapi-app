@@ -16,7 +16,8 @@ import { routeTree } from "./routeTree.gen"
 
 client.setConfig({
   baseURL: import.meta.env.VITE_API_URL ?? "",
-  auth: () => localStorage.getItem("access_token") || "",
+  // HttpOnly Cookie 鉴权：跨端口请求也需显式携带 Cookie
+  withCredentials: true,
 })
 
 const handleApiError = (error: Error) => {
@@ -24,7 +25,8 @@ const handleApiError = (error: Error) => {
     error instanceof AxiosError &&
     [401, 403].includes(error.response?.status ?? 0)
   ) {
-    localStorage.removeItem("access_token")
+    // 无法删除 HttpOnly Cookie，但可清除前端登录标记并跳回登录页
+    document.cookie = "logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
     window.location.href = "/login"
   }
 }

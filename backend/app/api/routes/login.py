@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -9,7 +9,7 @@ from app import crud
 from app.api.deps import CurrentUser, SessionDep, get_current_active_superuser
 from app.core import security
 from app.core.config import settings
-from app.models import Message, NewPassword, Token, UserPublic, UserUpdate
+from app.models import Message, NewPassword, UserPublic, UserUpdate
 from app.utils import (
     generate_password_reset_token,
     generate_reset_password_email,
@@ -20,12 +20,19 @@ from app.utils import (
 router = APIRouter(tags=["login"])
 
 
+def _cookie_max_age() -> int:
+    # Cookie 存活时长（秒）与 JWT 过期时间保持一致
+    return settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+
+
 @router.post("/login/access-token")
 def login_access_token(
-    session: SessionDep, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
-) -> Token:
+    response: Response,
+    session: SessionDep,
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+) -> Message:
     """
-    OAuth2 compatible token login, get an access token for future requests
+    OAuth2 compatible token login, the access token is set in an HttpOnly cookie
     """
     user = crud.authenticate(
         session=session, email=form_data.username, password=form_data.password
@@ -35,11 +42,40 @@ def login_access_token(
     elif not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    return Token(
-        access_token=security.create_access_token(
-            user.id, expires_delta=access_token_expires
-        )
+    access_token = security.create_access_token(
+        user.id, expires_delta=access_token_expires
     )
+    # HttpOnly Cookie：前端 JS 无法读取，浏览器自动携带，用于接口鉴权
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=settings.COOKIE_SECURE,
+        samesite="lax",
+        max_age=_cookie_max_age(),
+        path="/",
+    )
+    # 非 HttpOnly 标记 Cookie：仅供前端判断登录状态以控制路由跳转
+    response.set_cookie(
+        key="logged_in",
+        value="true",
+        httponly=False,
+        secure=settings.COOKIE_SECURE,
+        samesite="lax",
+        max_age=_cookie_max_age(),
+        path="/",
+    )
+    return Message(message="Login successful")
+
+
+@router.post("/login/logout")
+def login_logout(response: Response) -> Message:
+    """
+    Log out by clearing the authentication cookies
+    """
+    response.delete_cookie(key="access_token", path="/")
+    response.delete_cookie(key="logged_in", path="/")
+    return Message(message="Successfully logged out")
 
 
 @router.post("/login/test-token", response_model=UserPublic)

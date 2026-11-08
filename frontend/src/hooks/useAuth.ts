@@ -12,7 +12,8 @@ import { handleError } from "@/utils"
 import useCustomToast from "./useCustomToast"
 
 const isLoggedIn = () => {
-  return localStorage.getItem("access_token") !== null
+  // 只能读取非 HttpOnly 的登录标记 Cookie，真正的 access_token 是 HttpOnly、JS 不可见
+  return document.cookie.split("; ").some((c) => c.startsWith("logged_in="))
 }
 
 const useAuth = () => {
@@ -39,10 +40,10 @@ const useAuth = () => {
   })
 
   const login = async (data: AccessToken) => {
-    const response = await LoginService.loginAccessToken({
+    // 成功后后端会自行下发 HttpOnly access_token 与 logged_in 标记 Cookie
+    await LoginService.loginAccessToken({
       body: data,
     })
-    localStorage.setItem("access_token", response.data.access_token)
   }
 
   const loginMutation = useMutation({
@@ -53,9 +54,16 @@ const useAuth = () => {
     onError: handleError.bind(showErrorToast),
   })
 
-  const logout = () => {
-    localStorage.removeItem("access_token")
-    navigate({ to: "/login" })
+  const logout = async () => {
+    try {
+      // 请求后端下发 Set-Cookie 删除 HttpOnly access_token
+      await LoginService.loginLogout()
+    } finally {
+      document.cookie =
+        "logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
+      queryClient.clear()
+      navigate({ to: "/login" })
+    }
   }
 
   return {

@@ -6,3 +6,13 @@ backend/app/frontend/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Secrets — 只提交 *.example 模板，真实值保留在本地
+.env
+frontend/.env
+powersync/docker/.env
+powersync/docker/private-key.json
+
+# 构建缓存 / 多余锁文件（本项目用 bun）
+frontend/.tanstack/
+package-lock.json
