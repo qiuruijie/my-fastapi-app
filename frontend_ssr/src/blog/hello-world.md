@@ -8,6 +8,8 @@ authors:
 
 Welcome to my blog! This is my first post.
 
+Testing latest-changes GitHub App integration.
+
 ## Getting Started
 
 Here's some content with **bold** and _italic_ text.
