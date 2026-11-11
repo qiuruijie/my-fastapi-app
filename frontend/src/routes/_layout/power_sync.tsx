@@ -58,10 +58,10 @@ class Connector implements PowerSyncBackendConnector {
         const transaction = await database.getNextCrudTransaction();
         if (!transaction) return;
 
-        for (const op of transaction.crud) {
-            const record = { ...op.opData, id: op.id };
-            // upload to your backend API
-        }
+        // for (const op of transaction.crud) {
+        //     const record = { ...op.opData, id: op.id };
+        //     // upload to your backend API
+        // }
 
         await transaction.complete();
     }

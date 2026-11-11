@@ -2,6 +2,17 @@
 
 ## Latest Changes
 
+## 1.0.1 (2026-11-12)
+
+- feat: 新增 SSR 前端 frontend_ssr
+- feat: 博客支持 Markdown 渲染和图片懒加载
+- fix: 主题切换刷新后不保留的问题
+- feat: release-notes 自动发布脚本
+
+## 1.0.0 (2026-01-01)
+
+- 初始版本
+
 ### Fixes
 
 * 🐛 Fix Sonner toast theme sync. PR [#2450](https://github.com/fastapi/full-stack-fastapi-template/pull/2450) by [@chris-bs23](https://github.com/chris-bs23).

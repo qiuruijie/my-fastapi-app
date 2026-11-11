@@ -13,6 +13,9 @@ frontend/.env
 powersync/docker/.env
 powersync/docker/private-key.json
 
+# 生产 TLS 证书目录（私钥严禁提交）
+certs/
+
 # 构建缓存 / 多余锁文件（本项目用 bun）
 frontend/.tanstack/
 package-lock.json

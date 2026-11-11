@@ -8,8 +8,10 @@ services:
       # Listen on port 443, default for HTTPS
       - "443:443"
     volumes:
-      # Mount the volume to store the certificates
-      - traefik-certificates:/certificates
+      # 挂载自有证书目录（证书+私钥，PEM 格式，不进 git）
+      - ./certs:/certificates:ro
+      # 挂载 TLS 证书动态配置（由 file provider 加载，v3 静态配置不支持 tls.stores）
+      - ./traefik.deploy.yml:/etc/traefik/tls-dynamic.yml:ro
     command:
       # Enable Docker in Traefik, so that it reads labels from Docker services
       - --providers.docker
@@ -22,10 +24,9 @@ services:
       - --entrypoints.http.http.redirections.entrypoint.scheme=https
       # Create an entrypoint "https" listening on port 443
       - --entrypoints.https.address=:443
-      # Store the Let's Encrypt certificates in the mounted volume
-      - --certificatesresolvers.le.acme.storage=/certificates/acme.json
-      # Use the TLS Challenge for Let's Encrypt
-      - --certificatesresolvers.le.acme.tlschallenge=true
+      # 不再使用 Let's Encrypt（ACME）：改用 file provider 加载自有默认证书
+      # （Traefik v3 中 tls.stores 属于动态配置，不能写进静态 traefik.yml）
+      - --providers.file.filename=/etc/traefik/tls-dynamic.yml
       # Enable the access log, with HTTP requests
       - --accesslog
       # Enable the Traefik log, for configurations and errors
@@ -34,28 +35,18 @@ services:
   db:
     restart: always
 
-  adminer:
-    restart: always
-    labels:
-      # Route HTTPS traffic for the Adminer subdomain
-      - traefik.http.routers.adminer-https.rule=Host(`adminer.${DOMAIN:?Variable not set}`)
-      - traefik.http.routers.adminer-https.entrypoints=https
-      - traefik.http.routers.adminer-https.tls=true
-      # Use the Let's Encrypt resolver
-      - traefik.http.routers.adminer-https.tls.certresolver=le
+  # 生产环境不再对外暴露 Adminer：单域名证书不覆盖 adminer 子域名，
+  # 且数据库管理工具暴露公网本身有风险；需要 DBA 操作时建议走 SSH 隧道连接 db 容器
 
   backend:
     restart: always
     environment:
       FRONTEND_HOST: https://${DOMAIN:?Variable not set}
+      # 生产 HTTPS 下鉴权用的 HttpOnly Cookie 必须标记 Secure（本地开发才为 false）
+      COOKIE_SECURE: "true"
     labels:
       # Route HTTPS traffic for this domain
       - traefik.http.routers.backend-https.rule=Host(`${DOMAIN:?Variable not set}`)
       - traefik.http.routers.backend-https.entrypoints=https
       - traefik.http.routers.backend-https.tls=true
-      # Use the Let's Encrypt resolver
-      - traefik.http.routers.backend-https.tls.certresolver=le
-
-volumes:
-  # Create a volume to store the certificates, even if the container is recreated
-  traefik-certificates:
+      # 不指定 certresolver，Traefik 自动使用 tls.stores.default 里的默认证书
