@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Docs
+
+* docs: test latest-changes app. PR [#6](https://github.com/qiuruijie/my-fastapi-app/pull/6) by [@qiuruijie](https://github.com/qiuruijie).
+
 ## 1.0.1 (2026-11-12)
 
 - feat: 新增 SSR 前端 frontend_ssr
